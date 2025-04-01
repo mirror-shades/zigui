@@ -3,6 +3,8 @@ import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import multiprocessing
+import shutil
+import os
 
 class BuildHandler(FileSystemEventHandler):
     def __init__(self):
@@ -23,6 +25,7 @@ class BuildHandler(FileSystemEventHandler):
         try:
             subprocess.run(["zig", "build", "-Ddev=true"], check=True)
             print("Build successful!")
+
         except subprocess.CalledProcessError as e:
             print(f"Build failed: {e}")
         
@@ -34,6 +37,11 @@ def run_server():
 def main():
     # Initial build
     subprocess.run(["zig", "build"], check=True)
+    # delete the old script.js
+    os.remove("zig-out/script.js")
+    # copy the new script.js
+    shutil.copy("static/dev/dev-script.js", "zig-out/script.js")
+    print("Script.js updated!")
     
     # Start HTTP server in a separate process
     server_process = multiprocessing.Process(target=run_server)
