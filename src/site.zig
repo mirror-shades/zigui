@@ -53,7 +53,7 @@ pub fn init() void {
     // Create button
     const button = doc.call("createElement", .{zjb.constString("button")}, zjb.Handle);
     defer button.release();
-    button.set("textContent", zjb.constString("Increment th"));
+    button.set("textContent", zjb.constString("increment"));
 
     // Add click handler to button
     const handler = zjb.fnHandle("handleCounterClick", &handleClick);
