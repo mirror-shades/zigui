@@ -1,7 +1,7 @@
 .{
-    .name = .example,
+    .name = .source,
     .version = "0.0.0",
-    .fingerprint = 0x6eec9b9fe64850bb,
+    .fingerprint = 0x5f8a7f73bd75ecc9,
     .dependencies = .{
         .javascript_bridge = .{
             .path = "javascript_bridge",

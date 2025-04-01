@@ -9,7 +9,7 @@ var zjb = new Zjb();
 async function loadAndInitWasm() {
   try {
     const results = await WebAssembly.instantiateStreaming(
-      fetch("example.wasm"),
+      fetch("source.wasm"),
       { env: env, zjb: zjb.imports }
     );
     zjb.setInstance(results.instance);
@@ -53,7 +53,7 @@ let lastModified = Date.now();
 
 setInterval(async () => {
   try {
-    const response = await fetch("example.wasm", { method: "HEAD" });
+    const response = await fetch("source.wasm", { method: "HEAD" });
     const currentModified = new Date(
       response.headers.get("last-modified")
     ).getTime();
