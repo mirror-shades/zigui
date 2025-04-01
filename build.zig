@@ -4,6 +4,13 @@ const demo_webserver = @import("demo_webserver");
 pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
+    // Add an option for dev mode
+    const dev_mode = b.option(
+        bool,
+        "dev",
+        "Use development static files",
+    ) orelse false;
+
     const zjb = b.dependency("javascript_bridge", .{});
 
     const example = b.addExecutable(.{
@@ -27,7 +34,7 @@ pub fn build(b: *std.Build) void {
     }).step);
     b.getInstallStep().dependOn(&b.addInstallFileWithDir(extract_example_out, dir, "zjb_extract.js").step);
     b.getInstallStep().dependOn(&b.addInstallDirectory(.{
-        .source_dir = b.path("static"),
+        .source_dir = b.path(if (dev_mode) "static/dev" else "static/prod"),
         .install_dir = dir,
         .install_subdir = "",
     }).step);

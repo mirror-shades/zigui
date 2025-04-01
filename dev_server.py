@@ -21,7 +21,7 @@ class BuildHandler(FileSystemEventHandler):
             
         print(f"\nDetected change in {event.src_path}")
         try:
-            subprocess.run(["zig15", "build"], check=True)
+            subprocess.run(["zig15", "build", "-Ddev=true"], check=True)
             print("Build successful!")
         except subprocess.CalledProcessError as e:
             print(f"Build failed: {e}")
