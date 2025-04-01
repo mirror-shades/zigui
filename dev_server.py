@@ -33,7 +33,7 @@ def run_server():
 
 def main():
     # Initial build
-    subprocess.run(["zig", "build"], check=True)
+    subprocess.run(["zig15", "build"], check=True)
     
     # Start HTTP server in a separate process
     server_process = multiprocessing.Process(target=run_server)
