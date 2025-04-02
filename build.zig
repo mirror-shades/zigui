@@ -3,6 +3,7 @@ const demo_webserver = @import("demo_webserver");
 
 pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
+    const update_only = b.option(bool, "update", "Only update WASM, skip static files") orelse false;
 
     const zjb = b.dependency("javascript_bridge", .{});
 
@@ -26,11 +27,14 @@ pub fn build(b: *std.Build) void {
         .dest_dir = .{ .override = dir },
     }).step);
     b.getInstallStep().dependOn(&b.addInstallFileWithDir(extract_source_out, dir, "zjb_extract.js").step);
-    b.getInstallStep().dependOn(&b.addInstallDirectory(.{
-        .source_dir = b.path("static/core"),
-        .install_dir = dir,
-        .install_subdir = "",
-    }).step);
+
+    if (!update_only) {
+        b.getInstallStep().dependOn(&b.addInstallDirectory(.{
+            .source_dir = b.path("static/core"),
+            .install_dir = dir,
+            .install_subdir = "",
+        }).step);
+    }
 
     const run_demo_server = demo_webserver.runDemoServer(b, b.getInstallStep(), .{});
     const serve = b.step("serve", "serve website locally");

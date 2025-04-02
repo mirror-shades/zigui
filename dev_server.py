@@ -6,7 +6,24 @@ import multiprocessing
 import shutil
 import os
 
-class BuildHandler(FileSystemEventHandler):
+
+def run_server():
+    subprocess.run(["python", "-m", "http.server", "-d", "zig-out"])
+
+def build():
+    print("building...")
+    # Initial build
+    subprocess.run(["zig", "build"], check=True)
+    # delete the old script.js
+    os.remove("zig-out/script.js")
+    # copy the new script.js
+    shutil.copy("static/dev/dev-script.js", "zig-out/script.js")
+    print("built")
+
+def update_wasm():
+    subprocess.run(["zig", "build", "-Dupdate=true"], check=True)
+
+class UpdateHandler(FileSystemEventHandler):
     def __init__(self):
         self.last_build = 0
         self.build_cooldown = 1  # seconds
@@ -23,32 +40,22 @@ class BuildHandler(FileSystemEventHandler):
             
         print(f"\nDetected change in {event.src_path}")
         try:
-            subprocess.run(["zig", "build", "-Ddev=true"], check=True)
-            print("Build successful!")
+            update_wasm()
 
         except subprocess.CalledProcessError as e:
             print(f"Build failed: {e}")
         
         self.last_build = current_time
 
-def run_server():
-    subprocess.run(["python", "-m", "http.server", "-d", "zig-out"])
 
 def main():
-    # Initial build
-    subprocess.run(["zig", "build"], check=True)
-    # delete the old script.js
-    os.remove("zig-out/script.js")
-    # copy the new script.js
-    shutil.copy("static/dev/dev-script.js", "zig-out/script.js")
-    print("Script.js updated!")
-    
+    build()
     # Start HTTP server in a separate process
     server_process = multiprocessing.Process(target=run_server)
     server_process.start()
     
     # Set up file watching
-    event_handler = BuildHandler()
+    event_handler = UpdateHandler()
     observer = Observer()
     observer.schedule(event_handler, path='src', recursive=True)
     observer.start()
