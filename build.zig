@@ -7,6 +7,13 @@ pub fn build(b: *std.Build) void {
 
     const zjb = b.dependency("javascript_bridge", .{});
 
+    // Create the zigui module
+    const zigui_mod = b.addModule("zigui", .{
+        .root_source_file = b.path("lib/zigui/zigui.zig"),
+    });
+    // Add dependencies to zigui module
+    zigui_mod.addImport("zjb", zjb.module("zjb"));
+
     const source = b.addExecutable(.{
         .name = "source",
         .root_source_file = b.path("src/main.zig"),
@@ -14,6 +21,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
     source.root_module.addImport("zjb", zjb.module("zjb"));
+    source.root_module.addImport("zigui", zigui_mod);
     source.entry = .disabled;
     source.rdynamic = true;
 

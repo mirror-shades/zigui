@@ -1,7 +1,7 @@
 const std = @import("std");
 const zjb = @import("zjb");
 const alloc = std.heap.wasm_allocator;
-const site = @import("site.zig");
+const counter_app = @import("counter_app.zig");
 
 fn log(v: anytype) void {
     zjb.global("console").call("log", .{v}, void);
@@ -14,8 +14,8 @@ fn logStr(str: []const u8) void {
 
 pub const panic = zjb.panic;
 export fn main() void {
-    // Initialize our site
-    site.init();
+    // Initialize our counter app
+    counter_app.init();
 
     // Verify no memory leaks
     std.debug.assert(zjb.unreleasedHandleCount() == 0);

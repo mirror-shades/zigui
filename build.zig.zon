@@ -4,7 +4,7 @@
     .fingerprint = 0x5f8a7f73bd75ecc9,
     .dependencies = .{
         .javascript_bridge = .{
-            .path = "javascript_bridge",
+            .path = "lib/javascript_bridge",
         },
         .demo_webserver = .{
             .url = "git+https://github.com/scottredig/zig-demo-webserver.git#51b2442fba8b4c030ec1a5ea2c0de2746c0e672b",
