@@ -2,4 +2,6 @@ this is based off of [zig-javascript-bridge](https://github.com/scottredig/zig-j
 
 A library that makes it easier to build web UI with zig.
 
+Example can be found here: https://mirror-shades.github.io/zigui-example/
+
 The dev server allows for reactive updates to your site as you build. The project will autocompile each time an src file is changed, and the webpage will reload when the wasm is modified.

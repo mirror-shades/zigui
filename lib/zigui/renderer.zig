@@ -214,3 +214,304 @@ pub fn deinit() void {
         current_vdom = null;
     }
 }
+
+const CommonCssProperties = std.ComptimeStringMap([]const u8, .{
+    // Layout
+    .{ "display", "display" },
+    .{ "position", "position" },
+    .{ "width", "width" },
+    .{ "height", "height" },
+    .{ "min-width", "minWidth" },
+    .{ "min-height", "minHeight" },
+    .{ "max-width", "maxWidth" },
+    .{ "max-height", "maxHeight" },
+    .{ "box-sizing", "boxSizing" },
+
+    // Positioning
+    .{ "top", "top" },
+    .{ "right", "right" },
+    .{ "bottom", "bottom" },
+    .{ "left", "left" },
+    .{ "z-index", "zIndex" },
+    .{ "float", "float" },
+    .{ "clear", "clear" },
+
+    // Margin & Padding
+    .{ "margin", "margin" },
+    .{ "margin-top", "marginTop" },
+    .{ "margin-right", "marginRight" },
+    .{ "margin-bottom", "marginBottom" },
+    .{ "margin-left", "marginLeft" },
+    .{ "margin-inline", "marginInline" },
+    .{ "margin-inline-start", "marginInlineStart" },
+    .{ "margin-inline-end", "marginInlineEnd" },
+    .{ "margin-block", "marginBlock" },
+    .{ "margin-block-start", "marginBlockStart" },
+    .{ "margin-block-end", "marginBlockEnd" },
+
+    .{ "padding", "padding" },
+    .{ "padding-top", "paddingTop" },
+    .{ "padding-right", "paddingRight" },
+    .{ "padding-bottom", "paddingBottom" },
+    .{ "padding-left", "paddingLeft" },
+    .{ "padding-inline", "paddingInline" },
+    .{ "padding-inline-start", "paddingInlineStart" },
+    .{ "padding-inline-end", "paddingInlineEnd" },
+    .{ "padding-block", "paddingBlock" },
+    .{ "padding-block-start", "paddingBlockStart" },
+    .{ "padding-block-end", "paddingBlockEnd" },
+
+    // Flexbox
+    .{ "flex", "flex" },
+    .{ "flex-direction", "flexDirection" },
+    .{ "flex-wrap", "flexWrap" },
+    .{ "flex-flow", "flexFlow" },
+    .{ "flex-grow", "flexGrow" },
+    .{ "flex-shrink", "flexShrink" },
+    .{ "flex-basis", "flexBasis" },
+    .{ "justify-content", "justifyContent" },
+    .{ "align-items", "alignItems" },
+    .{ "align-self", "alignSelf" },
+    .{ "align-content", "alignContent" },
+    .{ "gap", "gap" },
+    .{ "row-gap", "rowGap" },
+    .{ "column-gap", "columnGap" },
+    .{ "order", "order" },
+
+    // Grid
+    .{ "grid", "grid" },
+    .{ "grid-template", "gridTemplate" },
+    .{ "grid-template-columns", "gridTemplateColumns" },
+    .{ "grid-template-rows", "gridTemplateRows" },
+    .{ "grid-template-areas", "gridTemplateAreas" },
+    .{ "grid-auto-columns", "gridAutoColumns" },
+    .{ "grid-auto-rows", "gridAutoRows" },
+    .{ "grid-auto-flow", "gridAutoFlow" },
+    .{ "grid-column", "gridColumn" },
+    .{ "grid-column-start", "gridColumnStart" },
+    .{ "grid-column-end", "gridColumnEnd" },
+    .{ "grid-row", "gridRow" },
+    .{ "grid-row-start", "gridRowStart" },
+    .{ "grid-row-end", "gridRowEnd" },
+    .{ "grid-area", "gridArea" },
+
+    // Colors & Backgrounds
+    .{ "color", "color" },
+    .{ "background", "background" },
+    .{ "background-color", "backgroundColor" },
+    .{ "background-image", "backgroundImage" },
+    .{ "background-repeat", "backgroundRepeat" },
+    .{ "background-position", "backgroundPosition" },
+    .{ "background-size", "backgroundSize" },
+    .{ "background-attachment", "backgroundAttachment" },
+    .{ "background-clip", "backgroundClip" },
+    .{ "background-origin", "backgroundOrigin" },
+    .{ "background-blend-mode", "backgroundBlendMode" },
+    .{ "opacity", "opacity" },
+
+    // Border & Outline
+    .{ "border", "border" },
+    .{ "border-width", "borderWidth" },
+    .{ "border-style", "borderStyle" },
+    .{ "border-color", "borderColor" },
+    .{ "border-top", "borderTop" },
+    .{ "border-right", "borderRight" },
+    .{ "border-bottom", "borderBottom" },
+    .{ "border-left", "borderLeft" },
+    .{ "border-radius", "borderRadius" },
+    .{ "border-top-left-radius", "borderTopLeftRadius" },
+    .{ "border-top-right-radius", "borderTopRightRadius" },
+    .{ "border-bottom-right-radius", "borderBottomRightRadius" },
+    .{ "border-bottom-left-radius", "borderBottomLeftRadius" },
+    .{ "border-collapse", "borderCollapse" },
+    .{ "border-spacing", "borderSpacing" },
+    .{ "outline", "outline" },
+    .{ "outline-width", "outlineWidth" },
+    .{ "outline-style", "outlineStyle" },
+    .{ "outline-color", "outlineColor" },
+    .{ "outline-offset", "outlineOffset" },
+
+    // Typography
+    .{ "font", "font" },
+    .{ "font-family", "fontFamily" },
+    .{ "font-size", "fontSize" },
+    .{ "font-weight", "fontWeight" },
+    .{ "font-style", "fontStyle" },
+    .{ "font-variant", "fontVariant" },
+    .{ "font-stretch", "fontStretch" },
+    .{ "line-height", "lineHeight" },
+    .{ "letter-spacing", "letterSpacing" },
+    .{ "word-spacing", "wordSpacing" },
+    .{ "text-align", "textAlign" },
+    .{ "text-decoration", "textDecoration" },
+    .{ "text-decoration-line", "textDecorationLine" },
+    .{ "text-decoration-style", "textDecorationStyle" },
+    .{ "text-decoration-color", "textDecorationColor" },
+    .{ "text-transform", "textTransform" },
+    .{ "text-indent", "textIndent" },
+    .{ "text-overflow", "textOverflow" },
+    .{ "text-shadow", "textShadow" },
+    .{ "white-space", "whiteSpace" },
+    .{ "word-break", "wordBreak" },
+    .{ "word-wrap", "wordWrap" },
+    .{ "overflow-wrap", "overflowWrap" },
+
+    // Effects & Animations
+    .{ "transform", "transform" },
+    .{ "transform-origin", "transformOrigin" },
+    .{ "transform-style", "transformStyle" },
+    .{ "backface-visibility", "backfaceVisibility" },
+    .{ "perspective", "perspective" },
+    .{ "perspective-origin", "perspectiveOrigin" },
+    .{ "transition", "transition" },
+    .{ "transition-property", "transitionProperty" },
+    .{ "transition-duration", "transitionDuration" },
+    .{ "transition-timing-function", "transitionTimingFunction" },
+    .{ "transition-delay", "transitionDelay" },
+    .{ "animation", "animation" },
+    .{ "animation-name", "animationName" },
+    .{ "animation-duration", "animationDuration" },
+    .{ "animation-timing-function", "animationTimingFunction" },
+    .{ "animation-delay", "animationDelay" },
+    .{ "animation-iteration-count", "animationIterationCount" },
+    .{ "animation-direction", "animationDirection" },
+    .{ "animation-fill-mode", "animationFillMode" },
+    .{ "animation-play-state", "animationPlayState" },
+
+    // Box Effects
+    .{ "box-shadow", "boxShadow" },
+    .{ "box-decoration-break", "boxDecorationBreak" },
+    .{ "filter", "filter" },
+    .{ "backdrop-filter", "backdropFilter" },
+    .{ "mix-blend-mode", "mixBlendMode" },
+    .{ "isolation", "isolation" },
+
+    // Overflow & Visibility
+    .{ "overflow", "overflow" },
+    .{ "overflow-x", "overflowX" },
+    .{ "overflow-y", "overflowY" },
+    .{ "visibility", "visibility" },
+    .{ "clip", "clip" },
+    .{ "clip-path", "clipPath" },
+    .{ "mask", "mask" },
+
+    // Cursor & Interaction
+    .{ "cursor", "cursor" },
+    .{ "pointer-events", "pointerEvents" },
+    .{ "user-select", "userSelect" },
+    .{ "resize", "resize" },
+    .{ "touch-action", "touchAction" },
+
+    // Table
+    .{ "table-layout", "tableLayout" },
+    .{ "caption-side", "captionSide" },
+    .{ "empty-cells", "emptyCells" },
+
+    // Lists
+    .{ "list-style", "listStyle" },
+    .{ "list-style-type", "listStyleType" },
+    .{ "list-style-position", "listStylePosition" },
+    .{ "list-style-image", "listStyleImage" },
+
+    // Content
+    .{ "content", "content" },
+    .{ "quotes", "quotes" },
+    .{ "counter-reset", "counterReset" },
+    .{ "counter-increment", "counterIncrement" },
+
+    // Writing Modes
+    .{ "writing-mode", "writingMode" },
+    .{ "text-orientation", "textOrientation" },
+    .{ "direction", "direction" },
+    .{ "unicode-bidi", "unicodeBidi" },
+});
+
+const StyleSystem = struct {
+    const CSSError = error{
+        InvalidProperty,
+        InvalidValue,
+    };
+
+    pub fn setStyle(element: zjb.Handle, property: []const u8, value: []const u8) !void {
+        // Try fast path first
+        if (CommonCssProperties.get(property)) |js_name| {
+            const value_handle = zjb.string(value);
+            defer value_handle.release();
+            element.style.set(js_name, value_handle);
+            return;
+        }
+
+        // Validate property name for dynamic path
+        if (!isValidCSSProperty(property)) {
+            return CSSError.InvalidProperty;
+        }
+
+        // Fall back to dynamic approach for uncommon properties
+        try setDynamicStyle(element, property, value);
+    }
+
+    fn setDynamicStyle(element: zjb.Handle, property: []const u8, value: []const u8) !void {
+        const camelCase = try toCamelCase(zigui.allocator, property);
+        defer zigui.allocator.free(camelCase);
+
+        // Use JavaScript's style object directly
+        const js = try std.fmt.allocPrint(zigui.allocator, "this.style['{s}'] = '{s}'", .{ camelCase, value });
+        defer zigui.allocator.free(js);
+
+        const code_handle = zjb.string(js);
+        defer code_handle.release();
+
+        zjb.global("Function")
+            .new(.{code_handle})
+            .call("call", .{element}, void);
+    }
+
+    fn isValidCSSProperty(property: []const u8) bool {
+        // Basic validation:
+        // - Must start with a letter or hyphen
+        // - Can only contain letters, numbers, and hyphens
+        // - Cannot have consecutive hyphens
+        if (property.len == 0) return false;
+
+        var last_was_hyphen = false;
+        for (property, 0..) |c, i| {
+            switch (c) {
+                'a'...'z', 'A'...'Z' => last_was_hyphen = false,
+                '0'...'9' => {
+                    if (i == 0) return false;
+                    last_was_hyphen = false;
+                },
+                '-' => {
+                    if (last_was_hyphen) return false;
+                    last_was_hyphen = true;
+                },
+                else => return false,
+            }
+        }
+        return !last_was_hyphen;
+    }
+
+    fn toCamelCase(allocator: std.mem.Allocator, kebab: []const u8) ![]const u8 {
+        var result = std.ArrayList(u8).init(allocator);
+        errdefer result.deinit();
+
+        var capitalize_next = false;
+        for (kebab, 0..) |c, i| {
+            if (c == '-') {
+                capitalize_next = true;
+                continue;
+            }
+
+            if (capitalize_next) {
+                try result.append(std.ascii.toUpper(c));
+                capitalize_next = false;
+            } else if (i == 0) {
+                try result.append(std.ascii.toLower(c));
+            } else {
+                try result.append(c);
+            }
+        }
+
+        return result.toOwnedSlice();
+    }
+};

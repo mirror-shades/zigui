@@ -12,7 +12,9 @@ pub const button = Components.button;
 pub const text = Components.text;
 
 // Re-export state management
-pub const useState = State.useState;
+pub const useState = State.useLocal;
+pub const createState = State.useGlobal;
+pub const getStore = State.getStore;
 
 // Re-export render
 pub const render = @import("renderer.zig").render;

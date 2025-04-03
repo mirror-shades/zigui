@@ -2,8 +2,8 @@ const std = @import("std");
 const zjb = @import("zjb");
 const zigui = @import("zigui");
 
-// State declaration
-var count = zigui.useState(i32, 0);
+// State declaration with a key
+var count: zigui.State.LocalState(i32) = undefined;
 
 // Increment function
 fn increment() callconv(.C) void {
@@ -64,6 +64,7 @@ fn Counter() anyerror!zigui.VDom.VNode {
 // Initialize UI
 pub fn init() void {
     zigui.render(&Counter) catch |err| zjb.throwError(err);
+    count = zigui.State.useLocal(i32, 0);
 }
 
 // Export necessary functions for event handlers
